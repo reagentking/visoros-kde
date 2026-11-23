@@ -6,6 +6,12 @@
 //  Others:              tasks · ─ · tray · clock      (launcher removed)
 //  Every bar starts on the top edge; move any of them afterwards in Edit Mode.
 
+// Workspace switcher: VisorOS tabs if installed, otherwise the stock pager.
+var TABS = "org.visoros.workspacetabs";
+var KNOWN = (typeof knownWidgetTypes === "function") ? knownWidgetTypes() : knownWidgetTypes;
+var SWITCHER = KNOWN.indexOf(TABS) >= 0 ? TABS : "org.kde.plasma.pager";
+var OTHER_SWITCHER = SWITCHER === TABS ? "org.kde.plasma.pager" : TABS;
+
 function byType(ws, t) { return ws.filter(function (w) { return w.type === t; }); }
 var removed = [];
 function drop(w) { removed.push(w.id); w.remove(); }
@@ -20,17 +26,20 @@ for (var i = 0; i < ps.length; i++) {
     var order = [];
 
     if (p.screen === 0) {
-        var pager = byType(ws, "org.kde.plasma.pager")[0];
-        if (!pager) pager = p.addWidget("org.kde.plasma.pager");
-        pager.currentConfigGroup = ["General"];
-        pager.writeConfig("displayedText", 0);        // show desktop numbers
-        pager.writeConfig("showWindowIcons", false);
+        byType(ws, OTHER_SWITCHER).forEach(drop);
+        var pager = live(byType(ws, SWITCHER))[0];
+        if (!pager) pager = p.addWidget(SWITCHER);
+        if (SWITCHER === "org.kde.plasma.pager") {
+            pager.currentConfigGroup = ["General"];
+            pager.writeConfig("displayedText", 0);    // show desktop numbers
+            pager.writeConfig("showWindowIcons", false);
+        }
 
         var spacers = live(byType(p.widgets(), "org.kde.plasma.panelspacer"));
         while (spacers.length < 2) { spacers.push(p.addWidget("org.kde.plasma.panelspacer")); }
         for (var s = 2; s < spacers.length; s++) drop(spacers[s]);
 
-        ws = p.widgets();
+        ws = live(p.widgets());
         var launchers = byType(ws, "org.kde.plasma.kickoff");
         var tasks = byType(ws, "org.kde.plasma.icontasks");
         var clock = byType(ws, "org.kde.plasma.digitalclock");
@@ -40,6 +49,7 @@ for (var i = 0; i < ps.length; i++) {
     } else {
         byType(ws, "org.kde.plasma.kickoff").forEach(drop);
         byType(ws, "org.kde.plasma.pager").forEach(drop);
+        byType(ws, TABS).forEach(drop);
         var sp = live(byType(p.widgets(), "org.kde.plasma.panelspacer"));
         if (sp.length === 0) sp.push(p.addWidget("org.kde.plasma.panelspacer"));
         for (var t = 1; t < sp.length; t++) drop(sp[t]);

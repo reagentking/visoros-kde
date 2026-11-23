@@ -25,6 +25,9 @@ kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle kvantum
 # KGlobalSettings::StyleChanged = 2
 dbus-send --session --type=signal /KGlobalSettings org.kde.KGlobalSettings.notifyChange int32:2 int32:0 || true
 
+echo "== Global theme package (OSD override via scripts/osd-override.sh on)"
+kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.visoros.desktop
+
 echo "== Fonts"
 if [[ -n "$(fc-list 'Saira SemiCondensed')" && -n "$(fc-list 'Barlow')" ]]; then
   ui="Barlow,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"

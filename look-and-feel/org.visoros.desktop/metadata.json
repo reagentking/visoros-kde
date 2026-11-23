@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [{ "Name": "reagentking" }],
+        "Category": "",
+        "Description": "VISR OS-inspired global theme: flat front-end, green back-end",
+        "Id": "org.visoros.desktop",
+        "License": "GPL-3.0-or-later",
+        "Name": "VisorOS",
+        "Version": "0.1"
+    },
+    "X-Plasma-APIVersion": "2"
+}

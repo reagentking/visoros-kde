@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "KSysguard/SensorFace",
+    "KPlugin": {
+        "Authors": [{ "Name": "reagentking" }],
+        "Description": "Vehicle-dashboard gauges in the VisorOS style",
+        "Icon": "speedometer",
+        "Id": "org.visoros.dashboard",
+        "License": "GPL-3.0-or-later",
+        "Name": "VisorOS Dashboard",
+        "Version": "0.1"
+    },
+    "X-KDE-ParentApp": "org.kde.plasmashell"
+}

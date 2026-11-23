@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [{ "Name": "reagentking" }],
+        "Category": "Windows and Tasks",
+        "Description": "Virtual desktops as VisorOS menu tabs",
+        "Icon": "virtual-desktops",
+        "Id": "org.visoros.workspacetabs",
+        "License": "GPL-3.0-or-later",
+        "Name": "Workspace Tabs (VisorOS)",
+        "Version": "0.1"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

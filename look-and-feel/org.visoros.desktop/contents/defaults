@@ -1,0 +1,12 @@
+[kdeglobals][General]
+ColorScheme=VisorOS
+
+[kdeglobals][KDE]
+widgetStyle=kvantum
+
+[plasmarc][Theme]
+name=VisorOS
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__VisorOS

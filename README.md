@@ -16,7 +16,11 @@ The concept and full build plan are in `docs/visoros-kde-concept.html`.
 | `kvantum/` | Qt app style (recolor of KvAdaptaDark) | `kvantum/build.py` |
 | `wallpaper/` | Spanning wallpapers, cut per monitor | `wallpaper/src/render.py` |
 | `fonts/` | Saira SemiCondensed, Barlow, Share Tech Mono (OFL) | `scripts/get-fonts.sh` |
-| `scripts/` | Backup/restore, panel layout | |
+| `look-and-feel/` | Global theme package (defaults; splash/lock/logout borrowed from CachyOS-Nord for now) | hand-written |
+| `qml/` | Ammo-counter OSD, shadowing Plasma's `org.kde.plasma.workspace.osd` module | `scripts/osd-override.sh on` |
+| `plasmoids/` | Workspace Tabs widget (virtual desktops as menu tabs) | hand-written |
+| `sensorfaces/` | VisorOS Dashboard face for System Monitor / sensor widgets | hand-written |
+| `scripts/` | Backup/restore, panel layout, OSD override | |
 
 ## Use
 
@@ -28,6 +32,7 @@ scripts/backup.sh pre-visr       # snapshot the current look first
 ./install.sh                     # symlink everything into ~/.local/share and ~/.config
 ./apply.sh                       # switch the session over (WALLPAPER=ring for the ring set)
 scripts/apply-panels.sh          # one top taskbar per screen, apps from that screen only
+scripts/osd-override.sh on       # ammo-counter volume/brightness OSD (off to revert)
 ```
 
 Roll back with `scripts/restore.sh backups/<name>.tar.gz`.

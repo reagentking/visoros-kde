@@ -1,0 +1,7 @@
+# local snapshots of the desktop config
+backups/
+# 343's UNSC emblem, cut from a local image: personal use only, never redistributed
+wallpaper/private/
+# rendered wallpapers (rebuild with wallpaper/src/render.py)
+wallpaper/out/
+__pycache__/

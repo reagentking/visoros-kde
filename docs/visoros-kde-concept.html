@@ -1,0 +1,603 @@
+<title>VisorOS for Plasma</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;500;700&family=Barlow:wght@400;500;600&family=Share+Tech+Mono&display=swap">
+<style>
+/* Layout: one slate column. Front-end (cool, flat, light selection) vs back-end (neon green) is the organising idea; mockup plates are full-width, the build plan is a phased list below. */
+:root{
+  --ground:#121920;    /* page ground: lifted slate, not black */
+  --slate:#1c2630;     /* front-end panel */
+  --slate2:#273440;    /* raised / title bars */
+  --rule:#3a4a57;      /* hairlines */
+  --text:#eef3f6;      /* primary text */
+  --sub:#93a4b1;       /* secondary text */
+  --ice:#a8dcf2;       /* front-end accent: cool, desaturated */
+  --sel:#e9f1f5;       /* selection fill (dark ink on top) */
+  --ink:#0e141a;
+  --green:#6dff8f;     /* back-end */
+  --green-dim:#2e7a45;
+  --amber:#ffb547;--red:#ff5a52;
+  --f-display:"Saira Semi Condensed","Arial Narrow",sans-serif;
+  --f-body:"Barlow","Segoe UI",system-ui,sans-serif;
+  --f-mono:"Share Tech Mono",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 4rem;
+  background-image:linear-gradient(180deg,#1e2d3a 0,var(--ground) 520px)}
+.wrap{max-width:1180px;margin:0 auto}
+header{padding-block:3.5rem 2rem;display:grid;gap:.7rem}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.18em;color:var(--ice);text-transform:uppercase}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2.6rem,7vw,4.6rem);line-height:.95;letter-spacing:.03em;margin:0;text-transform:uppercase;text-wrap:balance}
+h1 span{color:var(--ice)}
+.lede{max-width:70ch;color:var(--sub);margin:0}
+.lede b{color:var(--text);font-weight:500}
+h2{font-family:var(--f-display);font-weight:500;font-size:1.8rem;letter-spacing:.06em;text-transform:uppercase;margin:0;display:flex;gap:.8rem;align-items:baseline;text-wrap:balance}
+h2 .tag{font-family:var(--f-mono);font-size:.75rem;color:var(--ink);background:var(--sel);padding:.05rem .45rem;letter-spacing:.12em}
+h3{font-family:var(--f-display);font-weight:500;font-size:1.2rem;letter-spacing:.05em;text-transform:uppercase;margin:0}
+section{display:grid;gap:1.4rem;padding-block:2.6rem;border-top:1px solid var(--rule)}
+figure{margin:0;display:grid;gap:.7rem}
+.plate{background:var(--slate);border:1px solid var(--rule);overflow-x:auto}
+.plate svg{display:block;width:100%;height:auto;min-width:640px}
+.plate.wall svg{min-width:960px}
+figcaption{font-size:.93rem;color:var(--sub);max-width:82ch}
+figcaption b{color:var(--ink);background:var(--sel);font-weight:500;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin-right:.5rem;padding:.05rem .4rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:1.4rem}
+.grid2>*{min-width:0}
+.note{border-left:2px solid var(--amber);padding:.2rem 0 .2rem 1rem;color:var(--sub);font-size:.93rem;max-width:80ch;margin:0}
+.note b{color:var(--amber);font-weight:600}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:1rem}
+.side{border:1px solid var(--rule);padding:1.1rem 1.2rem;display:grid;gap:.8rem;min-width:0}
+.side.front{background:var(--slate)}
+.side.back{background:#070b09;border-color:var(--green-dim)}
+.side.back h3,.side.back .k{color:var(--green)}
+.side p{margin:0;color:var(--sub);font-size:.93rem}
+.k{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.16em;color:var(--ice);text-transform:uppercase}
+.sws{display:flex;flex-wrap:wrap;gap:.5rem}
+.sw{display:grid;grid-template-columns:28px auto;gap:.5rem;align-items:center;font-family:var(--f-mono);font-size:.74rem;color:var(--sub);min-width:150px}
+.sw i{width:28px;height:28px;border:1px solid var(--rule)}
+.sw span b{display:block;color:var(--text);font-family:var(--f-body);font-weight:600;font-size:.86rem}
+.side.back .sw span b{color:var(--green)}
+.typeline{font-size:1.05rem}
+.phases{display:grid;gap:1rem}
+.phase{display:grid;grid-template-columns:5.5rem 1fr;gap:1.2rem;border:1px solid var(--rule);background:var(--slate);padding:1.2rem 1.3rem}
+.phase>*{min-width:0}
+.ph-n{font-family:var(--f-display);font-size:2.6rem;font-weight:700;color:var(--ice);line-height:1;display:grid;gap:.4rem;align-content:start}
+.ph-n small{font-family:var(--f-mono);font-size:.7rem;font-weight:400;color:var(--sub);letter-spacing:.1em}
+.phase h3{margin-bottom:.3rem}
+.phase p{margin:.2rem 0 .6rem;color:var(--sub);max-width:76ch}
+.phase ul{margin:0;padding-left:1.1rem;display:grid;gap:.35rem}
+.phase li{max-width:82ch}
+.phase li::marker{color:var(--ice)}
+code{font-family:var(--f-mono);font-size:.86em;color:var(--ice);background:rgba(168,220,242,.08);padding:.05em .35em;word-break:break-word}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
+.chip{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .5rem;border:1px solid var(--rule);color:var(--sub)}
+.chip.easy{border-color:#2f7a5a;color:#7fe3b0}.chip.med{border-color:#7a6430;color:var(--amber)}.chip.hard{border-color:#7a3030;color:var(--red)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:620px}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-mono);font-weight:400;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ice)}
+td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+td{color:var(--sub)}
+.tbl{overflow-x:auto;border:1px solid var(--rule)}
+pre{font-family:var(--f-mono);font-size:.82rem;background:#070b09;border:1px solid var(--green-dim);padding:1rem;overflow-x:auto;color:var(--green);margin:0;line-height:1.5}
+pre .c{color:var(--green-dim)}
+.sd{font-family:var(--f-display)}.sm{font-family:var(--f-mono)}.sb{font-family:var(--f-body)}
+@media (prefers-reduced-motion:no-preference){.blink{animation:blink 1.2s steps(2) infinite}}
+@keyframes blink{50%{opacity:0}}
+@media (max-width:560px){.phase{grid-template-columns:1fr}.ph-n{grid-auto-flow:column;justify-content:start;align-items:baseline}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">// Concept + build plan · Plasma 6 · Wayland · CachyOS</div>
+  <h1>VisorOS <span>for Plasma</span></h1>
+  <p class="lede">Halo Infinite's <b>VISR OS</b> isn't really a helmet overlay. It's one operating system that runs on every UNSC device: the menus, the HUD, the ammo display on the gun, the Warthog dashboard, terminals. This concept treats your desktop as one more device running it. It follows the rule 343 described: <b>front-end</b> systems are flat, muted, cool and "lighter", and <b>back-end</b> systems are neon green, "Windows" versus "DOS".</p>
+</header>
+
+<!-- ============ 01 LANGUAGE ============ -->
+<section>
+  <h2><span class="tag">01</span>One system, two faces</h2>
+  <div class="split">
+    <div class="side front">
+      <div class="k">Front-end · everything you click</div>
+      <h3>Apps, panels, menus, login</h3>
+      <p>Flat lifted slate instead of black, hairline frames and a cool desaturated accent. Selection is a <b>solid light fill with dark text</b>, the most recognisable cue from Infinite's menus. Corners are cut only on the selected item, never on everything.</p>
+      <div class="sws">
+        <div class="sw"><i style="background:#1c2630"></i><span><b>Slate</b>#1C2630</span></div>
+        <div class="sw"><i style="background:#273440"></i><span><b>Raised</b>#273440</span></div>
+        <div class="sw"><i style="background:#3a4a57"></i><span><b>Rule</b>#3A4A57</span></div>
+        <div class="sw"><i style="background:#eef3f6"></i><span><b>Text</b>#EEF3F6</span></div>
+        <div class="sw"><i style="background:#93a4b1"></i><span><b>Sub</b>#93A4B1</span></div>
+        <div class="sw"><i style="background:#a8dcf2"></i><span><b>Ice accent</b>#A8DCF2</span></div>
+        <div class="sw"><i style="background:#e9f1f5"></i><span><b>Selection</b>#E9F1F5</span></div>
+      </div>
+      <div class="typeline"><span style="font-family:var(--f-display);font-weight:700;letter-spacing:.06em">SAIRA SEMI CONDENSED</span> <span style="color:var(--sub)">headers ·</span> <span>Barlow body text</span></div>
+    </div>
+    <div class="side back">
+      <div class="k">Back-end · everything underneath</div>
+      <h3>Terminal, boot, TTY, logs</h3>
+      <p>Neon green on near-black, monospaced, with no chrome. Wherever you're talking to the system directly instead of through an app, the green comes out: Konsole, the boot sequence, the TTY and the splash log.</p>
+      <div class="sws">
+        <div class="sw"><i style="background:#070b09"></i><span><b>Void</b>#070B09</span></div>
+        <div class="sw"><i style="background:#2e7a45"></i><span><b>Dim</b>#2E7A45</span></div>
+        <div class="sw"><i style="background:#6dff8f"></i><span><b>Signal</b>#6DFF8F</span></div>
+      </div>
+      <div class="typeline" style="font-family:var(--f-mono);color:var(--green)">SHARE TECH MONO &gt; 0123456789_</div>
+      <div class="sws" style="margin-top:.4rem">
+        <div class="sw"><i style="background:#ffb547"></i><span><b style="color:var(--amber)">Amber</b>warning</span></div>
+        <div class="sw"><i style="background:#ff5a52"></i><span><b style="color:var(--red)">Red</b>critical</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note"><b>Accessibility rule carried over from 343:</b> state is never shown by color alone. "Selected" is a fill change, "warning" gets a ▲ shape, and text size scales everywhere from one setting (Plasma's global font size).</p>
+</section>
+
+<!-- ============ 02 SCREENS ============ -->
+<section>
+  <h2><span class="tag">02</span>Your four screens</h2>
+  <p class="lede">These are drawn to your monitors' real physical sizes, with the <b>right 1440p screen as primary</b> and the 1080p landscape screen above it. The UI is drawn at about 3× scale so you can read it. Every screen gets <b>its own top taskbar showing only that screen's apps</b>. Each bar is a separate panel, so you can move any one of them to the bottom or a side on its own.</p>
+  <figure>
+    <div class="plate wall" id="wall-default"></div>
+    <figcaption><b>Default</b> Top bars on all four screens. The primary bar carries the launcher, workspace tabs, tray and clock. The others carry a screen number and their own apps. The focused app (Konsole) shows as a light chip, the front-end selection style. Konsole itself uses the green back-end look.</figcaption>
+  </figure>
+  <figure>
+    <div class="plate wall" id="wall-mixed"></div>
+    <figcaption><b>Per-screen example</b> The same theme with the bars moved: a side rail on the portrait screen and a bottom bar on the upper screen, so it sits right above the primary. The theme graphics are drawn for all four edges, so any mix looks deliberate.</figcaption>
+  </figure>
+  <figure>
+    <div class="plate" id="panel-detail"></div>
+    <figcaption><b>Taskbar detail</b> At real size. The workspace switcher is a row of tabs, like Infinite's menu tabs, rather than the old compass.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 03 DEVICES ============ -->
+<section>
+  <h2><span class="tag">03</span>Same OS, every surface</h2>
+  <figure>
+    <div class="plate">
+<svg viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four desktop surfaces in the VISR OS style: settings, terminal, volume display and system dashboard">
+  <rect width="1200" height="760" fill="#121920"/>
+  <!-- Q1 SETTINGS (front-end) -->
+  <g transform="translate(20 20)">
+    <rect width="570" height="350" fill="#1c2630" stroke="#3a4a57"/>
+    <rect width="570" height="40" fill="#273440"/>
+    <text x="16" y="26" class="sd" font-weight="500" font-size="17" letter-spacing="2" fill="#eef3f6">SYSTEM SETTINGS</text>
+    <text x="554" y="26" text-anchor="end" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">FRONT-END · CFG/04</text>
+    <g class="sd" font-size="14" letter-spacing="1.5">
+      <path d="M16 60 H160 L170 70 V90 H16Z" fill="#e9f1f5"/><text x="28" y="80" fill="#0e141a" font-weight="700">APPEARANCE</text>
+      <text x="28" y="118" fill="#93a4b1">DISPLAY</text><text x="28" y="150" fill="#93a4b1">INPUT</text>
+      <text x="28" y="182" fill="#93a4b1">AUDIO</text><text x="28" y="214" fill="#93a4b1">NETWORK</text><text x="28" y="246" fill="#93a4b1">POWER</text>
+    </g>
+    <path d="M186 56 V334" stroke="#3a4a57"/>
+    <text x="206" y="78" class="sd" font-weight="500" font-size="18" letter-spacing="1.5" fill="#eef3f6">COLORS &amp; THEMES</text>
+    <text x="206" y="96" class="sm" font-size="10" letter-spacing="2" fill="#a8dcf2">PROFILE · VISR FRONT-END</text>
+    <text x="206" y="134" class="sb" font-size="14" fill="#eef3f6">Accent</text>
+    <g><rect x="396" y="120" width="22" height="22" fill="#a8dcf2"/><path d="M392 116 h8 M392 116 v8 M422 146 h-8 M422 146 v-8" stroke="#eef3f6" stroke-width="1.5"/>
+      <rect x="428" y="120" width="22" height="22" fill="#7fe3b0"/><rect x="460" y="120" width="22" height="22" fill="#ffb547"/><rect x="492" y="120" width="22" height="22" fill="#ff8a7a"/><rect x="524" y="120" width="22" height="22" fill="#c7b8ff"/></g>
+    <text x="206" y="180" class="sb" font-size="14" fill="#eef3f6">Blur behind panels</text>
+    <rect x="496" y="166" width="50" height="20" fill="#e9f1f5"/><rect x="526" y="169" width="17" height="14" fill="#0e141a"/>
+    <text x="206" y="222" class="sb" font-size="14" fill="#eef3f6">Animation speed</text>
+    <rect x="396" y="215" width="150" height="3" fill="#3a4a57"/><rect x="396" y="215" width="96" height="3" fill="#a8dcf2"/><rect x="488" y="208" width="8" height="17" fill="#eef3f6"/>
+    <text x="206" y="264" class="sb" font-size="14" fill="#eef3f6">Text size</text>
+    <rect x="452" y="248" width="24" height="24" fill="none" stroke="#3a4a57"/><text x="464" y="265" text-anchor="middle" class="sm" fill="#93a4b1">–</text>
+    <text x="500" y="266" text-anchor="middle" class="sd" font-weight="500" font-size="15" fill="#eef3f6">110%</text>
+    <rect x="522" y="248" width="24" height="24" fill="none" stroke="#3a4a57"/><text x="534" y="265" text-anchor="middle" class="sm" fill="#93a4b1">+</text>
+    <path d="M206 296 H546" stroke="#3a4a57"/>
+    <text x="206" y="322" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">[ESC] BACK    [ENTER] APPLY</text>
+  </g>
+  <!-- Q2 KONSOLE (back-end) -->
+  <g transform="translate(610 20)">
+    <rect width="570" height="350" fill="#070b09" stroke="#2e7a45"/>
+    <rect width="570" height="28" fill="#0d1a11"/>
+    <text x="14" y="19" class="sm" font-size="11" letter-spacing="2" fill="#6dff8f">VISR//BACKEND · KONSOLE · NODE 01</text>
+    <text x="556" y="19" text-anchor="end" class="sm" font-size="11" fill="#2e7a45">[_][□][X]</text>
+    <g class="sm" font-size="13" fill="#6dff8f">
+      <text x="16" y="60"><tspan fill="#2e7a45">reagentking@cachyos ~ </tspan>&gt; sudo pacman -Syu</text>
+      <text x="16" y="84">:: Synchronizing package databases...</text>
+      <text x="16" y="106"><tspan fill="#2e7a45"> core       132.4 KiB </tspan>[####################] 100%</text>
+      <text x="16" y="128"><tspan fill="#2e7a45"> extra        8.2 MiB </tspan>[####################] 100%</text>
+      <text x="16" y="150"><tspan fill="#2e7a45"> cachyos      1.1 MiB </tspan>[####################] 100%</text>
+      <text x="16" y="174">:: Starting full system upgrade...</text>
+      <text x="16" y="196" fill="#2e7a45">   linux-cachyos 7.3.7-1   mesa 1:26.2.1-1</text>
+      <text x="16" y="218" fill="#2e7a45">   plasma-workspace 6.5.4-1   kwin 6.5.4-1</text>
+      <text x="16" y="242"><tspan fill="#ffb547">▲ </tspan>Total download size:  412.88 MiB</text>
+      <text x="16" y="266">:: Proceed with installation? [Y/n] <tspan class="blink">█</tspan></text>
+    </g>
+    <path d="M16 300 H554" stroke="#2e7a45" stroke-dasharray="2 4"/>
+    <text x="16" y="326" class="sm" font-size="10" letter-spacing="2" fill="#2e7a45">UPTIME 04:12:09 · LOAD 0.42 · TTY/PTS 3</text>
+  </g>
+  <!-- Q3 VOLUME OSD as AR counter -->
+  <g transform="translate(20 390)">
+    <defs><linearGradient id="osdbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3d4d"/><stop offset="1" stop-color="#121920"/></linearGradient></defs>
+    <rect width="570" height="350" fill="url(#osdbg)" stroke="#3a4a57"/>
+    <text x="16" y="28" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">ON-SCREEN DISPLAY · STYLED LIKE THE GUN'S AMMO COUNTER</text>
+    <g transform="translate(135 90)">
+      <path d="M0 0 H300 V150 H0Z" fill="#1c2630" fill-opacity=".94" stroke="#3a4a57"/>
+      <path d="M0 0 H300" stroke="#e9f1f5" stroke-width="2"/>
+      <text x="20" y="34" class="sm" font-size="10" letter-spacing="2" fill="#a8dcf2">AUDIO OUT</text>
+      <text x="20" y="50" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">SPEAKERS · DP-AUDIO</text>
+      <text x="280" y="92" text-anchor="end" class="sd" font-weight="700" font-size="76" fill="#eef3f6">64</text>
+      <g transform="translate(20 66)" fill="none" stroke="#eef3f6" stroke-width="2"><path d="M0 8h7l9-7v24l-9-7H0z"/><path d="M22 5q6 7 0 14"/></g>
+      <g fill="#eef3f6">
+        <rect x="20" y="112" width="6" height="18"/><rect x="30" y="112" width="6" height="18"/><rect x="40" y="112" width="6" height="18"/><rect x="50" y="112" width="6" height="18"/><rect x="60" y="112" width="6" height="18"/><rect x="70" y="112" width="6" height="18"/><rect x="80" y="112" width="6" height="18"/><rect x="90" y="112" width="6" height="18"/><rect x="100" y="112" width="6" height="18"/><rect x="110" y="112" width="6" height="18"/><rect x="120" y="112" width="6" height="18"/><rect x="130" y="112" width="6" height="18"/><rect x="140" y="112" width="6" height="18"/><rect x="150" y="112" width="6" height="18"/><rect x="160" y="112" width="6" height="18"/><rect x="170" y="112" width="6" height="18"/>
+        <g fill="#3a4a57"><rect x="180" y="112" width="6" height="18"/><rect x="190" y="112" width="6" height="18"/><rect x="200" y="112" width="6" height="18"/><rect x="210" y="112" width="6" height="18"/><rect x="220" y="112" width="6" height="18"/><rect x="230" y="112" width="6" height="18"/><rect x="240" y="112" width="6" height="18"/><rect x="250" y="112" width="6" height="18"/><rect x="260" y="112" width="6" height="18"/></g>
+      </g>
+    </g>
+    <text x="16" y="326" class="sb" font-size="13" fill="#93a4b1">Volume, brightness and battery pop-ups count up like ammo rounds.</text>
+  </g>
+  <!-- Q4 DASHBOARD -->
+  <g transform="translate(610 390)">
+    <rect width="570" height="350" fill="#1c2630" stroke="#3a4a57"/>
+    <rect width="570" height="40" fill="#273440"/>
+    <text x="16" y="26" class="sd" font-weight="500" font-size="17" letter-spacing="2" fill="#eef3f6">SYSTEM MONITOR</text>
+    <text x="554" y="26" text-anchor="end" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">DASHBOARD FACE</text>
+    <g fill="none" stroke-width="10">
+      <path d="M40 190 A70 70 0 0 1 180 190" stroke="#3a4a57"/><path d="M40 190 A70 70 0 0 1 84.2 124.9" stroke="#a8dcf2"/>
+      <path d="M220 190 A70 70 0 0 1 360 190" stroke="#3a4a57"/><path d="M220 190 A70 70 0 0 1 332.9 134.7" stroke="#ffb547"/>
+    </g>
+    <text x="110" y="182" text-anchor="middle" class="sd" font-weight="700" font-size="34" fill="#eef3f6">38<tspan font-size="16">%</tspan></text>
+    <text x="110" y="214" text-anchor="middle" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">CPU · 16 THREADS</text>
+    <text x="290" y="182" text-anchor="middle" class="sd" font-weight="700" font-size="34" fill="#eef3f6">71<tspan font-size="16">%</tspan></text>
+    <text x="290" y="214" text-anchor="middle" class="sm" font-size="10" letter-spacing="2" fill="#ffb547">▲ GPU · 71 °C</text>
+    <g class="sm" font-size="10" letter-spacing="1.5" fill="#93a4b1">
+      <text x="400" y="80">TEMPS °C</text>
+      <text x="400" y="110">CPU</text><rect x="440" y="102" width="110" height="8" fill="#3a4a57"/><rect x="440" y="102" width="68" height="8" fill="#a8dcf2"/><text x="554" y="124" text-anchor="end" fill="#eef3f6">62</text>
+      <text x="400" y="150">GPU</text><rect x="440" y="142" width="110" height="8" fill="#3a4a57"/><rect x="440" y="142" width="78" height="8" fill="#ffb547"/><text x="554" y="164" text-anchor="end" fill="#eef3f6">71</text>
+      <text x="400" y="190">NVME</text><rect x="440" y="182" width="110" height="8" fill="#3a4a57"/><rect x="440" y="182" width="48" height="8" fill="#a8dcf2"/><text x="554" y="204" text-anchor="end" fill="#eef3f6">44</text>
+    </g>
+    <path d="M16 244 H554" stroke="#3a4a57"/>
+    <text x="16" y="272" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">MEMORY · 11.4 / 32 GB</text>
+    <g fill="#a8dcf2"><rect x="16" y="284" width="60" height="12"/><rect x="80" y="284" width="60" height="12"/><rect x="144" y="284" width="60" height="12"/></g>
+    <g fill="#3a4a57"><rect x="208" y="284" width="60" height="12"/><rect x="272" y="284" width="60" height="12"/><rect x="336" y="284" width="60" height="12"/><rect x="400" y="284" width="60" height="12"/><rect x="464" y="284" width="90" height="12"/></g>
+    <text x="16" y="326" class="sb" font-size="13" fill="#93a4b1">Gauge cluster in the style of a vehicle dashboard. Works as a widget too.</text>
+  </g>
+</svg>
+    </div>
+    <figcaption><b>Surfaces</b> The same small set of patterns across four places, which is what makes it feel like one OS. Settings uses the front-end menu style with light-fill selection. Konsole is the green back-end. Volume and brightness pop-ups borrow the gun's ammo-counter display. System Monitor gets a dashboard-style gauge face.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 04 LAUNCHER / BOOT / LOGIN ============ -->
+<section>
+  <h2><span class="tag">04</span>Launcher, boot, login</h2>
+  <figure>
+    <div class="plate">
+<svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Application launcher in a tabbed menu style">
+  <defs><linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a5466"/><stop offset=".6" stop-color="#1b2833"/><stop offset="1" stop-color="#121920"/></linearGradient></defs>
+  <rect width="1200" height="560" fill="url(#lsky)"/>
+  <path d="M-40 420 Q600 120 1240 420" fill="none" stroke="#e9f1f5" stroke-opacity=".25" stroke-width="3"/>
+  <rect x="0" y="0" width="1200" height="560" fill="#121920" fill-opacity=".55"/>
+  <g class="sd" font-size="17" letter-spacing="2.5">
+    <text x="60" y="64" class="sm" font-size="11" fill="#93a4b1" letter-spacing="2">◀ Q</text>
+    <path d="M110 40 H232 L242 50 V76 H110Z" fill="#e9f1f5"/><text x="126" y="64" fill="#0e141a" font-weight="700">APPS</text>
+    <text x="272" y="64" fill="#eef3f6">PLACES</text>
+    <text x="392" y="64" fill="#eef3f6">RECENT</text>
+    <text x="512" y="64" fill="#eef3f6">SYSTEM</text>
+    <text x="632" y="64" fill="#eef3f6">POWER</text>
+    <text x="740" y="64" class="sm" font-size="11" fill="#93a4b1" letter-spacing="2">E ▶</text>
+  </g>
+  <path d="M60 90 H1140" stroke="#eef3f6" stroke-opacity=".35"/>
+  <rect x="60" y="110" width="420" height="36" fill="#1c2630" fill-opacity=".9" stroke="#3a4a57"/>
+  <text x="76" y="134" class="sb" font-size="15" fill="#eef3f6">ste<tspan class="blink" fill="#a8dcf2">|</tspan></text>
+  <text x="466" y="134" text-anchor="end" class="sm" font-size="10" letter-spacing="2" fill="#93a4b1">KRUNNER</text>
+  <g>
+    <path d="M60 170 H300 L314 184 V330 H60Z" fill="#e9f1f5"/>
+    <g transform="translate(160 214)" fill="none" stroke="#0e141a" stroke-width="2.4"><circle r="30"/><circle cx="10" cy="-8" r="10"/><path d="M-26 8l20 7"/><circle cx="-4" cy="17" r="5"/></g>
+    <text x="76" y="306" class="sd" font-weight="700" font-size="20" letter-spacing="2" fill="#0e141a">STEAM</text>
+    <text x="298" y="306" text-anchor="end" class="sm" font-size="10" fill="#0e141a">ENTER</text>
+    <rect x="330" y="170" width="254" height="160" fill="#1c2630" fill-opacity=".92" stroke="#3a4a57"/>
+    <g transform="translate(457 230)" fill="none" stroke="#93a4b1" stroke-width="2"><rect x="-24" y="-24" width="48" height="48"/><path d="M-12 0h24M0-12v24"/></g>
+    <text x="346" y="306" class="sd" font-weight="500" font-size="18" letter-spacing="2" fill="#eef3f6">STEAM SETTINGS</text>
+    <rect x="600" y="170" width="254" height="160" fill="#1c2630" fill-opacity=".92" stroke="#3a4a57"/>
+    <g transform="translate(727 230)" fill="none" stroke="#93a4b1" stroke-width="2"><path d="M-26-20h52v40h-52z M-14-8h28v16h-28z"/></g>
+    <text x="616" y="306" class="sd" font-weight="500" font-size="18" letter-spacing="2" fill="#eef3f6">STEAMTINKERLAUNCH</text>
+    <rect x="870" y="170" width="270" height="160" fill="#070b09" fill-opacity=".92" stroke="#2e7a45"/>
+    <text x="886" y="232" class="sm" font-size="14" fill="#6dff8f">&gt; ste_</text>
+    <text x="886" y="306" class="sm" font-size="12" letter-spacing="2" fill="#2e7a45">RUN IN KONSOLE</text>
+  </g>
+  <path d="M60 370 H1140" stroke="#3a4a57"/>
+  <text x="60" y="404" class="sd" font-weight="500" font-size="22" letter-spacing="2" fill="#eef3f6">STEAM</text>
+  <text x="60" y="428" class="sb" font-size="14" fill="#93a4b1">Valve's game launcher · last opened 2 hours ago · on screen 02</text>
+  <g class="sm" font-size="11" letter-spacing="2" fill="#93a4b1">
+    <text x="60" y="520">REAGENTKING · CACHYOS</text>
+    <text x="1140" y="520" text-anchor="end">[ENTER] LAUNCH   [ALT+ENTER] OPEN ON SCREEN…   [ESC] CLOSE</text>
+  </g>
+</svg>
+    </div>
+    <figcaption><b>Launcher</b> A full-screen tabbed menu modelled on Infinite's pause menu: tabs across the top, switched with Q and E, a light-filled selected tile and a details strip underneath. A typed command becomes a green "run in Konsole" tile, so the back-end shows through.</figcaption>
+  </figure>
+  <div class="grid2">
+  <figure>
+    <div class="plate">
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Back-end green boot splash">
+  <rect width="800" height="450" fill="#070b09"/>
+  <g class="sm" font-size="12" fill="#6dff8f" letter-spacing="1">
+    <text x="40" y="50">VISR OS // PLASMA 6.5 // CACHYOS 7.3.6</text>
+    <text x="40" y="76"><tspan fill="#2e7a45">[ OK ]</tspan> kwin_wayland ............. 4 OUTPUTS</text>
+    <text x="40" y="98"><tspan fill="#2e7a45">[ OK ]</tspan> plasmashell .............. 4 PANELS</text>
+    <text x="40" y="120"><tspan fill="#2e7a45">[ OK ]</tspan> pipewire ................. ONLINE</text>
+    <text x="40" y="142"><tspan fill="#2e7a45">[ .. ]</tspan> restoring session<tspan class="blink">_</tspan></text>
+  </g>
+  <text x="400" y="290" text-anchor="middle" class="sd" font-weight="700" font-size="54" letter-spacing="14" fill="#6dff8f">VISR OS</text>
+  <g fill="#6dff8f"><rect x="250" y="318" width="26" height="8"/><rect x="280" y="318" width="26" height="8"/><rect x="310" y="318" width="26" height="8"/><rect x="340" y="318" width="26" height="8"/><rect x="370" y="318" width="26" height="8"/><rect x="400" y="318" width="26" height="8"/><rect x="430" y="318" width="26" height="8"/></g>
+  <g fill="#2e7a45"><rect x="460" y="318" width="26" height="8"/><rect x="490" y="318" width="26" height="8"/><rect x="520" y="318" width="26" height="8"/></g>
+</svg>
+    </div>
+    <figcaption><b>Boot</b> The splash screen, and Plymouth before it, are back-end, so they're green. Real-looking boot lines type in, then a segmented progress bar fills.</figcaption>
+  </figure>
+  <figure>
+    <div class="plate">
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Front-end login screen">
+  <defs><linearGradient id="gsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a5466"/><stop offset=".65" stop-color="#1b2833"/><stop offset="1" stop-color="#121920"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#gsky)"/>
+  <path d="M-40 330 Q400 80 840 330" fill="none" stroke="#e9f1f5" stroke-opacity=".3" stroke-width="3"/>
+  <text x="40" y="58" class="sd" font-weight="700" font-size="44" fill="#eef3f6">21:47</text>
+  <text x="40" y="80" class="sm" font-size="11" fill="#93a4b1" letter-spacing="2">MONDAY 23 NOVEMBER</text>
+  <g transform="translate(250 150)">
+    <rect width="300" height="190" fill="#1c2630" fill-opacity=".94" stroke="#3a4a57"/>
+    <path d="M0 0 H300" stroke="#e9f1f5" stroke-width="2"/>
+    <text x="20" y="34" class="sm" font-size="10" letter-spacing="2" fill="#a8dcf2">SIGN IN</text>
+    <rect x="20" y="50" width="44" height="44" fill="#273440"/><text x="42" y="80" text-anchor="middle" class="sd" font-weight="700" font-size="20" fill="#eef3f6">R</text>
+    <text x="78" y="70" class="sd" font-weight="500" font-size="20" letter-spacing="1.5" fill="#eef3f6">REAGENTKING</text>
+    <text x="78" y="88" class="sm" font-size="10" letter-spacing="1.5" fill="#93a4b1">PLASMA · WAYLAND</text>
+    <path d="M20 116 H270 L280 126 V146 H20Z" fill="#e9f1f5"/>
+    <text x="34" y="137" class="sm" font-size="14" letter-spacing="4" fill="#0e141a">●●●●●●●<tspan class="blink">|</tspan></text>
+    <text x="20" y="174" class="sm" font-size="9" letter-spacing="2" fill="#93a4b1">ENTER TO SIGN IN · CAPS LOCK OFF</text>
+  </g>
+</svg>
+    </div>
+    <figcaption><b>Login</b> SDDM and the lock screen are front-end: lifted slate over a bright sky, with the focused password field drawn as the light selection fill.</figcaption>
+  </figure>
+  </div>
+</section>
+
+<!-- ============ 05 PLAN ============ -->
+<section>
+  <h2><span class="tag">05</span>Build plan</h2>
+  <p class="lede">A Plasma "look" is really about ten separate theme types, each in its own folder and format. The plan builds them in order of payoff and bundles everything into one <b>Global Theme</b> at the end. The front-end/back-end split runs through all of it: two color sets, one set of shapes.</p>
+
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Layer</th><th>KDE mechanism</th><th>Face</th><th>Installs to</th></tr></thead>
+    <tbody>
+      <tr><td>Colors</td><td>Color scheme <code>.colors</code></td><td>Front</td><td><code>~/.local/share/color-schemes/</code></td></tr>
+      <tr><td>Terminal</td><td>Konsole <code>.colorscheme</code> + profile</td><td>Back</td><td><code>~/.local/share/konsole/</code></td></tr>
+      <tr><td>Panels, popups</td><td>Plasma Style (SVG)</td><td>Front</td><td><code>~/.local/share/plasma/desktoptheme/</code></td></tr>
+      <tr><td>Window frames</td><td>Aurorae (SVG)</td><td>Front</td><td><code>~/.local/share/aurorae/themes/</code></td></tr>
+      <tr><td>Qt app widgets</td><td>Kvantum (SVG + kvconfig)</td><td>Front</td><td><code>~/.config/Kvantum/</code></td></tr>
+      <tr><td>OSD, splash, lock, layout</td><td>Global Theme (QML)</td><td>Both</td><td><code>~/.local/share/plasma/look-and-feel/</code></td></tr>
+      <tr><td>Dashboard</td><td>System Monitor face (QML)</td><td>Front</td><td><code>~/.local/share/ksysguard/sensorfaces/</code></td></tr>
+      <tr><td>Login</td><td>SDDM theme (QML)</td><td>Front</td><td><code>/usr/share/sddm/themes/</code> (root)</td></tr>
+      <tr><td>Boot, TTY</td><td>Plymouth + vconsole colors</td><td>Back</td><td><code>/usr/share/plymouth/themes/</code> (root)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="phases">
+    <div class="phase"><div class="ph-n">0<small>SETUP</small></div><div>
+      <h3>Toolchain, backup, primary screen</h3>
+      <ul>
+        <li>Repo at <code>~/claude_shit/visoros-kde/</code>, one folder per layer, plus an <code>install.sh</code> that symlinks into <code>~/.local/share</code> so edits show up live.</li>
+        <li>Install <code>kvantum</code>, <code>plasma-sdk</code> (<code>plasmoidviewer</code>, <code>plasmathemeexplorer</code>), <code>inkscape</code>, <code>konsave</code>, and the fonts (Saira Semi Condensed, Barlow, Share Tech Mono; all OFL).</li>
+        <li>Snapshot the current CachyOSNordLightly + Breeze setup with <code>konsave -s pre-visr</code> so you can roll back in one command.</li>
+        <li>Make sure Plasma thinks the <b>right 1440p</b> screen is primary (Display Configuration → "Primary", or <code>kscreen-doctor output.&lt;name&gt;.priority.1</code>). The layout script relies on this to decide which bar gets the tray and clock.</li>
+      </ul>
+      <div class="chips"><span class="chip easy">Easy</span><span class="chip">~1 evening</span></div>
+    </div></div>
+
+    <div class="phase"><div class="ph-n">1<small>QUICK WIN</small></div><div>
+      <h3>Both color sets, fonts, Konsole, wallpaper</h3>
+      <ul>
+        <li><code>VisorOS.colors</code> (front-end): slate grounds, ice accent, and a light <code>Selection</code> background with dark <code>Selection</code> foreground. That single choice gives every Qt list, menu and tab the Infinite menu look.</li>
+        <li>Konsole <code>VisorOS-Backend.colorscheme</code>: green on near-black, with the 16 ANSI colors kept readable (not everything green) so tools like <code>btop</code> and <code>git diff</code> still work.</li>
+        <li>An original sky/ring-arc wallpaper set, cut per monitor (2× 2560×1440, 1920×1080, 1080×1920 portrait) so the arc carries across all four screens.</li>
+      </ul>
+      <div class="chips"><span class="chip easy">Easy</span><span class="chip">~1 evening</span></div>
+    </div></div>
+
+    <div class="phase"><div class="ph-n">2<small>SHELL</small></div><div>
+      <h3>Plasma Style + per-screen panels</h3>
+      <ul>
+        <li>Fork Breeze's desktoptheme and redraw <code>panel-background</code>, <code>dialogs/background</code>, <code>tooltip</code>, <code>button</code>, <code>lineedit</code>, <code>tabbar</code> and <code>tasks</code> as flat slate with hairlines. Use the light-fill chip for <code>tasks</code> focus and <code>tabbar</code> selection.</li>
+        <li><b>Movable per screen:</b> each screen gets its own independent panel, and every panel SVG gets <code>north-</code>/<code>south-</code>/<code>east-</code>/<code>west-</code> element variants. That way each bar can go on any edge (right-click → Edit Mode → Position) and still look correct, with indicators on the screen-edge side.</li>
+        <li>Task manager on each bar: Icons-only Task Manager with "Show only tasks from the current screen" turned on.</li>
+        <li>Mask elements (<code>mask-topleft</code>…) so KWin's blur matches each panel's shape.</li>
+      </ul>
+      <div class="chips"><span class="chip med">Medium</span><span class="chip">~1 week of evenings</span></div>
+    </div></div>
+
+    <div class="phase"><div class="ph-n">3<small>WINDOWS</small></div><div>
+      <h3>Window decoration and app style</h3>
+      <ul>
+        <li>Aurorae decoration: flat raised-slate title bar with display-font caps, and a 2px light rule along the top of the focused window. Inactive windows drop to the Sub text color. Square buttons, with close turning red on hover.</li>
+        <li>Kvantum theme: flat controls, light-fill selection, segmented progress bars, square toggles. Start from <code>KvGnome</code> or <code>KvAdapta</code> as the base because they're flat already.</li>
+        <li>GTK apps (Firefox, Steam) pick up the colors through Breeze-GTK. Good enough to start.</li>
+      </ul>
+      <div class="chips"><span class="chip med">Medium</span><span class="chip">~1–2 weeks</span></div>
+    </div></div>
+
+    <div class="phase"><div class="ph-n">4<small>SURFACES</small></div><div>
+      <h3>The custom pieces that make it one OS</h3>
+      <ul>
+        <li><b>Workspace tabs</b> plasmoid: a pager drawn as menu tabs for the primary bar, using the <code>org.kde.plasma.private.pager</code> model. It stacks vertically when its bar is on a side.</li>
+        <li><b>Ammo-counter OSD</b>: override <code>contents/osd/Osd.qml</code> in the Global Theme so volume, brightness and mic pop-ups show a big number plus segment "rounds".</li>
+        <li><b>Dashboard face</b> for System Monitor: a sensor face package (arc gauges, temperature bars, segmented memory) that works both in the System Monitor app and as a desktop or panel widget.</li>
+        <li><b>Tabbed launcher</b> (stretch goal): a full-screen QML launcher on the <code>org.kde.plasma.private.kicker</code> models, with Q/E tab switching and a green "run in Konsole" fallback. The cheap version is Kickoff restyled by Phase 2.</li>
+      </ul>
+      <div class="chips"><span class="chip hard">Hard</span><span class="chip">~2–4 weeks</span></div>
+    </div></div>
+
+    <div class="phase"><div class="ph-n">5<small>BOOT</small></div><div>
+      <h3>Back-end boot, front-end login</h3>
+      <ul>
+        <li>Splash: <code>contents/splash/Splash.qml</code>, green boot log and segmented progress, driven by Plasma's <code>stage</code> property.</li>
+        <li>Lock screen + SDDM (Qt6 greeter) share one set of front-end QML components. Test with <code>sddm-greeter-qt6 --test-mode --theme ./sddm/VisorOS</code> before switching to it.</li>
+        <li>Optional: green TTY palette via <code>/etc/vconsole.conf</code> and a matching Plymouth script theme. Both need root and an initramfs rebuild, so do them last.</li>
+      </ul>
+      <div class="chips"><span class="chip med">Medium</span><span class="chip">~1 week · needs sudo</span></div>
+    </div></div>
+
+    <div class="phase"><div class="ph-n">6<small>SHIP</small></div><div>
+      <h3>Global Theme + layout script</h3>
+      <ul>
+        <li><code>look-and-feel/org.visoros.desktop/</code> with <code>contents/defaults</code> pointing at every layer, plus the OSD, splash and lockscreen QML.</li>
+        <li><code>contents/layouts/org.kde.plasma.desktop-layout.js</code> loops over <code>screenCount</code> and creates one <b>top</b> panel per screen (<code>panel.screen = i</code>), each with a current-screen-only task manager. Screen 0 is the primary, and only its panel gets the launcher, workspace tabs, tray and clock. After that, move any bar wherever you like and Plasma remembers it per screen.</li>
+        <li>Apply with <code>plasma-apply-lookandfeel -a org.visoros.desktop</code>. Keep the art original (no Halo or 343 logos or ripped assets) if it ever goes on the KDE Store.</li>
+        <li>Later polish: icon overrides on top of a line icon theme, an SVG cursor theme, and a subtle sound theme.</li>
+      </ul>
+      <div class="chips"><span class="chip easy">Easy</span><span class="chip">~1 evening</span></div>
+    </div></div>
+  </div>
+
+  <h3>Repo layout</h3>
+<pre><span class="c"># ~/claude_shit/visoros-kde/</span>
+colors/VisorOS.colors                konsole/VisorOS-Backend.{colorscheme,profile}
+desktoptheme/VisorOS/                aurorae/VisorOS/          kvantum/VisorOS/
+plasmoids/org.visoros.workspacetabs/ sensorfaces/org.visoros.dashboard/
+look-and-feel/org.visoros.desktop/contents/{defaults,layouts,osd,splash,lockscreen}/
+sddm/VisorOS/   plymouth/visoros/    wallpaper/{1440,1080,1080-portrait}/
+install.sh      <span class="c"># symlinks into ~/.local/share and ~/.config/Kvantum</span></pre>
+  <p class="note"><b>Sources:</b> the front-end/back-end split, the "lighter" flat menu direction and the ammo-display origin come from 343's <a href="https://www.halowaypoint.com/news/inside-infinite-october-2021" style="color:var(--ice)">Inside Infinite, October 2021</a>. The exact colors, fonts and layouts here are my own reading of it, not copied from the game.</p>
+</section>
+</div>
+
+<script>
+(function(){
+const C={slate:'#1c2630',slate2:'#273440',rule:'#3a4a57',text:'#eef3f6',sub:'#93a4b1',ice:'#a8dcf2',sel:'#e9f1f5',ink:'#0e141a',green:'#6dff8f',gdim:'#2e7a45',red:'#ff5a52',bez:'#2b343c'};
+const G={
+ web:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+ term:'<path d="M3 5h18v14H3z"/><path d="M7 10l3 2-3 2M12 15h5"/>',
+ game:'<path d="M5 8h14l3 9-4 1-3-4H9l-3 4-4-1z"/><path d="M8 10.5v3M6.5 12h3"/>',
+ steam:'<circle cx="12" cy="12" r="9"/><circle cx="15" cy="10" r="3"/><path d="M4 14.5l6 2.2"/><circle cx="11.5" cy="17" r="1.6"/>',
+ chat:'<path d="M4 5h16v10h-9l-4 4v-4H4z"/>',
+ mon:'<path d="M5 19v-6M10 19V6M15 19v-9M20 19V4"/>',
+ music:'<path d="M9 17V6l10-2v11"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="15" r="2"/>',
+ folder:'<path d="M3 7h7l2 2h9v10H3z"/>',
+ hex:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><circle cx="12" cy="12" r="3"/>',
+ wifi:'<path d="M3 10q9-8 18 0M6.5 13.5q5.5-5 11 0M10 17q2-2 4 0"/>',
+ vol:'<path d="M4 10h4l5-4v12l-5-4H4z"/><path d="M16 9q3 3 0 6"/>',
+ bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20.5h4"/>'
+};
+const f=n=>+n.toFixed(2);
+const glyph=(g,cx,cy,sz,col)=>`<g transform="translate(${f(cx-sz/2)} ${f(cy-sz/2)}) scale(${f(sz/24)})" fill="none" stroke="${col}" stroke-width="1.8" stroke-linecap="square">${G[g]}</g>`;
+const cut=(x,y,w,h,c)=>`${f(x)},${f(y)} ${f(x+w-c)},${f(y)} ${f(x+w)},${f(y+c)} ${f(x+w)},${f(y+h)} ${f(x)},${f(y+h)}`;
+const W=[.92,.6,.75,.4,.85,.55,.7,.3,.8,.5,.65,.45];
+
+function content(k,x,y,w,h,u){
+  let o='';
+  if(k==='term'){o+=`<rect x="${f(x-10*u)}" y="${f(y-10*u)}" width="${f(w+20*u)}" height="${f(h+20*u)}" fill="#070b09"/>`;
+    for(let i=0;i*13*u<h-10*u;i++)o+=`<rect x="${f(x)}" y="${f(y+i*13*u)}" width="${f(w*W[i%12]*.8)}" height="${f(4.5*u)}" fill="${i%4===0?C.green:C.gdim}" fill-opacity="${i%4===0?.95:.8}"/>`}
+  else if(k==='web'){o+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(16*u)}" fill="none" stroke="${C.rule}"/><rect x="${f(x)}" y="${f(y+26*u)}" width="${f(w)}" height="${f(h*.38)}" fill="${C.ice}" fill-opacity=".1"/>`;
+    for(let i=0;i<6;i++)o+=`<rect x="${f(x)}" y="${f(y+34*u+h*.38+i*12*u)}" width="${f(w*W[i]*.9)}" height="${f(4*u)}" fill="${C.sub}" fill-opacity=".35"/>`}
+  else if(k==='list'){for(let i=0;i*18*u<h-10*u;i++){const s=i===1;
+    if(s)o+=`<rect x="${f(x-4*u)}" y="${f(y+i*18*u-3*u)}" width="${f(w+8*u)}" height="${f(16*u)}" fill="${C.sel}"/>`;
+    o+=`<rect x="${f(x)}" y="${f(y+i*18*u)}" width="${f(10*u)}" height="${f(10*u)}" fill="none" stroke="${s?C.ink:C.sub}" stroke-opacity=".7"/><rect x="${f(x+16*u)}" y="${f(y+i*18*u+3*u)}" width="${f((w-16*u)*W[(i+3)%12]*.8)}" height="${f(4*u)}" fill="${s?C.ink:C.sub}" fill-opacity="${s?.8:.35}"/>`}}
+  else if(k==='game'){const id='gg'+Math.round(x*7+y);o+=`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a6a80"/><stop offset=".6" stop-color="#22394a"/><stop offset=".62" stop-color="#2c3a2a"/><stop offset="1" stop-color="#141c14"/></linearGradient></defs><rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" fill="url(#${id})"/><path d="M${f(x)} ${f(y+h*.5)} Q${f(x+w/2)} ${f(y+h*.05)} ${f(x+w)} ${f(y+h*.5)}" stroke="${C.sel}" stroke-opacity=".45" fill="none" stroke-width="${f(1.5*u)}"/><circle cx="${f(x+w/2)}" cy="${f(y+h*.5)}" r="${f(6*u)}" fill="none" stroke="${C.text}"/><text x="${f(x+w-8*u)}" y="${f(y+h-8*u)}" text-anchor="end" class="sd" font-weight="700" font-size="${f(22*u)}" fill="${C.text}">32</text>`}
+  else if(k==='chat'){o+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w*.22)}" height="${f(h)}" fill="${C.slate2}"/>`;
+    for(let i=0;i<5;i++)o+=i===2?`<rect x="${f(x+3*u)}" y="${f(y+3*u+i*14*u)}" width="${f(w*.22-6*u)}" height="${f(10*u)}" fill="${C.sel}"/>`:`<rect x="${f(x+6*u)}" y="${f(y+6*u+i*14*u)}" width="${f(w*.22-12*u)}" height="${f(4*u)}" fill="${C.sub}" fill-opacity=".4"/>`;
+    for(let i=0;i*24*u<h-24*u;i++)o+=`<rect x="${f(x+w*.22+9*u)}" y="${f(y+5*u+i*24*u)}" width="${f(10*u)}" height="${f(10*u)}" fill="${C.rule}"/><rect x="${f(x+w*.22+24*u)}" y="${f(y+6*u+i*24*u)}" width="${f((w*.78-30*u)*W[(i+5)%12])}" height="${f(4*u)}" fill="${C.sub}" fill-opacity=".45"/><rect x="${f(x+w*.22+24*u)}" y="${f(y+13*u+i*24*u)}" width="${f((w*.78-30*u)*W[(i+1)%12]*.6)}" height="${f(3.5*u)}" fill="${C.sub}" fill-opacity=".25"/>`}
+  else if(k==='graph'){const r=Math.min(w/4.6,h/2.4),cy=y+h*.62;[[x+w*.27,.38,C.ice],[x+w*.73,.71,'#ffb547']].forEach(([cx,p,c])=>{const a=Math.PI*(1+p);o+=`<path d="M${f(cx-r)} ${f(cy)}A${f(r)} ${f(r)} 0 0 1 ${f(cx+r)} ${f(cy)}" fill="none" stroke="${C.rule}" stroke-width="${f(5*u)}"/><path d="M${f(cx-r)} ${f(cy)}A${f(r)} ${f(r)} 0 0 1 ${f(cx+r*Math.cos(a))} ${f(cy+r*Math.sin(a))}" fill="none" stroke="${c}" stroke-width="${f(5*u)}"/><text x="${f(cx)}" y="${f(cy-4*u)}" text-anchor="middle" class="sd" font-weight="700" font-size="${f(16*u)}" fill="${C.text}">${Math.round(p*100)}</text>`})}
+  else if(k==='media'){const a=Math.min(w*.4,h-10*u);o+=`<rect x="${f(x)}" y="${f(y)}" width="${f(a)}" height="${f(a)}" fill="${C.slate2}"/>${glyph('music',x+a/2,y+a/2,a*.4,C.ice)}<rect x="${f(x+a+12*u)}" y="${f(y+6*u)}" width="${f((w-a-12*u)*.7)}" height="${f(6*u)}" fill="${C.text}" fill-opacity=".85"/><rect x="${f(x+a+12*u)}" y="${f(y+18*u)}" width="${f((w-a-12*u)*.45)}" height="${f(4*u)}" fill="${C.sub}" fill-opacity=".6"/><rect x="${f(x+a+12*u)}" y="${f(y+a-6*u)}" width="${f(w-a-12*u)}" height="${f(2*u)}" fill="${C.rule}"/><rect x="${f(x+a+12*u)}" y="${f(y+a-6*u)}" width="${f((w-a-12*u)*.38)}" height="${f(2*u)}" fill="${C.ice}"/>`;
+    for(let i=0;y+a+16*u+i*14*u<y+h-4*u;i++)o+=`<rect x="${f(x)}" y="${f(y+a+16*u+i*14*u)}" width="${f(w*W[(i+2)%12])}" height="${f(4*u)}" fill="${C.sub}" fill-opacity=".35"/>`}
+  return o;
+}
+
+function win(x,y,w,h,a,u){
+  const th=22*u,back=a.k==='term';
+  let o=`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" fill="${back?'#070b09':C.slate}" fill-opacity=".96" stroke="${back?C.gdim:C.rule}" stroke-width="${f(.8*u)}"/>`;
+  o+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(th)}" fill="${back?'#0d1a11':C.slate2}"/>`;
+  if(a.active)o+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(2*u)}" fill="${back?C.green:C.sel}"/>`;
+  const tc=back?C.green:(a.active?C.text:C.sub);
+  o+=glyph(a.g,x+14*u,y+th/2,11*u,tc);
+  o+=`<text x="${f(x+25*u)}" y="${f(y+th/2+4*u)}" class="${back?'sm':'sd'}" font-weight="500" font-size="${f(11*u)}" letter-spacing="${f(1*u)}" fill="${tc}">${back?'VISR//BACKEND · ':''}${a.t.toUpperCase()}</text>`;
+  for(let i=0;i<3;i++){const bx=x+w-(14+i*14)*u;o+=`<rect x="${f(bx-4.5*u)}" y="${f(y+th/2-4.5*u)}" width="${f(9*u)}" height="${f(9*u)}" fill="none" stroke="${back?C.gdim:C.sub}" stroke-opacity=".8" stroke-width="${f(.8*u)}"/>`}
+  return o+content(a.k,x+10*u,y+th+10*u,w-20*u,h-th-20*u,u);
+}
+
+function panel(s,edge,primary,tasks){
+  const u=s.u,T=34*u,m=5*u,cell=34*u,ic=18*u,H=edge==='top'||edge==='bottom';
+  let bx,by,bw,bh;
+  if(edge==='top'){bx=s.x+m;by=s.y+m;bw=s.w-2*m;bh=T}else if(edge==='bottom'){bx=s.x+m;by=s.y+s.h-m-T;bw=s.w-2*m;bh=T}else{bx=s.x+m;by=s.y+m;bw=T;bh=s.h-2*m}
+  let o=`<rect x="${f(bx)}" y="${f(by)}" width="${f(bw)}" height="${f(bh)}" fill="${C.slate}" fill-opacity=".9" stroke="${C.rule}" stroke-width="${f(.8*u)}"/>`;
+  const at=i=>H?[bx+8*u+i*cell+cell/2,by+bh/2]:[bx+bw/2,by+8*u+i*cell+cell/2];
+  const items=[primary?{lead:1}:{tag:s.tag}].concat(tasks);
+  items.forEach((it,i)=>{const[x,y]=at(i);
+    if(it.tag){o+=`<text x="${f(x)}" y="${f(y+4*u)}" text-anchor="middle" class="sm" font-size="${f(11*u)}" fill="${C.sub}">${it.tag}</text>`;return}
+    if(it.lead){o+=glyph('hex',x,y,ic+3*u,C.ice);return}
+    if(it.active)o+=`<polygon points="${cut(x-cell/2+3*u,y-cell/2+3*u,cell-6*u,cell-6*u,6*u)}" fill="${C.sel}"/>`;
+    o+=glyph(it.g,x,y,ic,it.active?C.ink:C.sub);
+    if(!it.active){const d=1.8*u;if(edge==='top')o+=`<rect x="${f(x-d)}" y="${f(by+2*u)}" width="${f(2*d)}" height="${f(2*d)}" fill="${C.sub}"/>`;else if(edge==='bottom')o+=`<rect x="${f(x-d)}" y="${f(by+bh-2*u-2*d)}" width="${f(2*d)}" height="${f(2*d)}" fill="${C.sub}"/>`;else o+=`<rect x="${f(bx+2*u)}" y="${f(y-d)}" width="${f(2*d)}" height="${f(2*d)}" fill="${C.sub}"/>`}
+  });
+  if(primary){
+    const n=5,sp=24*u,act=2;
+    for(let i=0;i<n;i++){const d=(i-(n-1)/2)*sp,x=H?bx+bw/2+d:bx+bw/2,y=H?by+bh/2:by+bh/2+d,a=i===act,c=20*u;
+      if(a)o+=`<polygon points="${cut(x-c/2,y-c/2,c,c,5*u)}" fill="${C.sel}"/>`;else o+=`<rect x="${f(x-c/2)}" y="${f(y-c/2)}" width="${f(c)}" height="${f(c)}" fill="none" stroke="${C.rule}" stroke-width="${f(.8*u)}"/>`;
+      o+=`<text x="${f(x)}" y="${f(y+4.5*u)}" text-anchor="middle" class="sd" font-weight="${a?700:500}" font-size="${f(12*u)}" fill="${a?C.ink:C.sub}">${i+1}</text>`}
+    const tray=['wifi','vol','bell'];
+    if(H){const cx=bx+bw-10*u;o+=`<text x="${f(cx)}" y="${f(by+bh/2+5.5*u)}" text-anchor="end" class="sd" font-weight="700" font-size="${f(16*u)}" fill="${C.text}">21:47</text>`;
+      tray.forEach((g,i)=>{o+=glyph(g,cx-56*u-i*26*u,by+bh/2,15*u,C.sub)})}
+    else{const cy=by+bh-10*u;o+=`<text x="${f(bx+bw/2)}" y="${f(cy-15*u)}" text-anchor="middle" class="sd" font-weight="700" font-size="${f(15*u)}" fill="${C.text}">21</text><text x="${f(bx+bw/2)}" y="${f(cy)}" text-anchor="middle" class="sd" font-weight="700" font-size="${f(15*u)}" fill="${C.text}">47</text>`;
+      tray.forEach((g,i)=>{o+=glyph(g,bx+bw/2,cy-44*u-i*26*u,15*u,C.sub)})}
+  }
+  let wa;if(edge==='top')wa=[s.x,by+bh,s.w,s.y+s.h-(by+bh)];else if(edge==='bottom')wa=[s.x,s.y,s.w,by-s.y];else wa=[bx+bw,s.y,s.x+s.w-(bx+bw),s.h];
+  return {svg:o,wa};
+}
+
+// physical mm layout; right 1440p is primary, 1080p landscape sits above it
+const SCREENS=[
+ {id:'left',tag:'02',x:0,y:313,w:597,h:336,px:2560,label:'27″ 1440P',
+  apps:[{t:'Steam',g:'steam',k:'list',r:[0,0,.3,1]},{t:'Game · Proton',g:'game',k:'game',r:[.3,0,.7,1]}]},
+ {id:'main',tag:'01',x:611,y:313,w:597,h:336,px:2560,primary:1,label:'27″ 1440P · PRIMARY',
+  apps:[{t:'Konsole',g:'term',k:'term',r:[0,0,.5,1],active:1},{t:'Firefox',g:'web',k:'web',r:[.5,0,.5,1]}]},
+ {id:'top',tag:'03',x:644,y:0,w:531,h:299,px:1920,label:'24″ 1080P · ABOVE PRIMARY',lx:632,ly:292,anchor:'end',
+  apps:[{t:'Discord',g:'chat',k:'chat',r:[0,0,.62,1]},{t:'System Monitor',g:'mon',k:'graph',r:[.62,0,.38,1]}]},
+ {id:'vert',tag:'04',x:1222,y:118,w:299,h:531,px:1080,label:'24″ 1080P · PORTRAIT',
+  apps:[{t:'Spotify',g:'music',k:'media',r:[0,0,1,.4]},{t:'Dolphin',g:'folder',k:'list',r:[0,.4,1,.6]}]}
+];
+SCREENS.forEach(s=>s.u=(s.w/s.px)*3.2);
+
+function wall(edges,key){
+  const id='w'+key;
+  let o=`<svg viewBox="-24 -16 1572 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four-monitor mockup"><defs>
+  <linearGradient id="${id}g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="649"><stop offset="0" stop-color="#4a6a80"/><stop offset=".55" stop-color="#22374a"/><stop offset="1" stop-color="#121920"/></linearGradient>
+  <clipPath id="${id}c">${SCREENS.map(s=>`<rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}"/>`).join('')}</clipPath></defs>`;
+  SCREENS.forEach(s=>{o+=`<rect x="${s.x-5}" y="${s.y-5}" width="${s.w+10}" height="${s.h+10}" rx="3" fill="#0b1015" stroke="${C.bez}" stroke-width="2"/>`});
+  o+=`<g clip-path="url(#${id}c)"><rect x="0" y="0" width="1524" height="649" fill="url(#${id}g)"/><path d="M-200 620 Q760 -120 1720 620" fill="none" stroke="${C.sel}" stroke-opacity=".3" stroke-width="4"/><path d="M-200 640 Q760 -100 1720 640" fill="none" stroke="${C.sel}" stroke-opacity=".08" stroke-width="16"/>`;
+  SCREENS.forEach(s=>{
+    const p=panel(s,edges[s.id],!!s.primary,s.apps.map(a=>({g:a.g,active:!!a.active})));
+    const u=s.u,g=8*u,[wx,wy,ww,wh]=p.wa,ix=wx+g,iy=wy+g,iw=ww-2*g,ih=wh-2*g;
+    s.apps.forEach(a=>{const[fx,fy,fw,fh]=a.r;o+=win(ix+fx*iw+(fx>0?g/2:0),iy+fy*ih+(fy>0?g/2:0),fw*iw-(fx>0?g/2:0)-(fx+fw<1?g/2:0),fh*ih-(fy>0?g/2:0)-(fy+fh<1?g/2:0),a,u)});
+    o+=p.svg;
+  });
+  o+='</g>';
+  SCREENS.forEach(s=>{const x=s.lx??s.x,y=s.ly??(s.y+s.h+24);o+=`<text x="${x}" y="${y}" text-anchor="${s.anchor||'start'}" class="sm" font-size="13" letter-spacing="2" fill="${s.primary?C.ice:C.sub}">${s.tag} · ${s.label} · ${edges[s.id].toUpperCase()} BAR</text>`});
+  return o+'</svg>';
+}
+
+function detail(){
+  let o=`<svg viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Taskbar detail at real size"><rect width="1200" height="520" fill="#121920"/>`;
+  const tasks=[{g:'term',active:1},{g:'web'}],t2=[{g:'steam'},{g:'game'}];
+  const rail={x:20,y:20,w:56,h:480,u:1};
+  o+=`<rect x="20" y="20" width="56" height="480" fill="#22374a"/>`+panel(rail,'left',true,tasks).svg;
+  const a={x:120,y:20,w:1060,h:46,u:1},b={x:120,y:120,w:1060,h:46,u:1,tag:'02'};
+  o+=`<rect x="${a.x}" y="${a.y}" width="${a.w}" height="${a.h}" fill="#22374a"/>`+panel(a,'top',true,tasks).svg;
+  o+=`<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="#22374a"/>`+panel(b,'top',false,t2).svg;
+  o+=`<text x="120" y="96" class="sm" font-size="11" letter-spacing="2" fill="${C.ice}">PRIMARY · LAUNCHER · APPS · WORKSPACE TABS · TRAY · CLOCK</text>`;
+  o+=`<text x="120" y="196" class="sm" font-size="11" letter-spacing="2" fill="${C.sub}">SECONDARY · SCREEN NUMBER · APPS ON THIS SCREEN ONLY</text>`;
+  const notes=[
+   ['Light chip = focused','The front-end selection style: solid light fill, dark glyph, one cut corner.'],
+   ['Small square = open','Sits on the screen-edge side and flips automatically when the bar moves.'],
+   ['Workspace tabs','Five menu-style tabs on the primary bar. They stack vertically on a side rail (left).'],
+   ['Per screen','Each bar is its own panel: move one to any edge without touching the others.'],
+   ['Flat','No glow, no visor curve. Hairlines and fills only, as in Infinite\'s menus.']
+  ];
+  notes.forEach((n,i)=>{const y=250+i*52;o+=`<rect x="120" y="${y-13}" width="4" height="30" fill="${C.sel}"/><text x="136" y="${y}" class="sd" font-weight="500" font-size="17" letter-spacing="1.5" fill="${C.text}">${n[0].toUpperCase()}</text><text x="136" y="${y+20}" class="sb" font-size="14" fill="${C.sub}">${n[1]}</text>`});
+  return o+'</svg>';
+}
+
+document.getElementById('wall-default').innerHTML=wall({left:'top',main:'top',top:'top',vert:'top'},'d');
+document.getElementById('wall-mixed').innerHTML=wall({left:'top',main:'top',top:'bottom',vert:'left'},'m');
+document.getElementById('panel-detail').innerHTML=detail();
+})();
+</script>

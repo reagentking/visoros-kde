@@ -1,0 +1,15 @@
+{
+  "KPlugin": {
+    "Id": "VisorOS",
+    "Name": "VisorOS",
+    "Description": "Flat front-end Plasma Style inspired by VISR OS",
+    "Authors": [
+      {
+        "Name": "reagentking"
+      }
+    ],
+    "License": "GPL-3.0-or-later",
+    "Version": "0.1"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
+}

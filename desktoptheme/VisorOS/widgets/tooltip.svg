@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="66" height="24" viewBox="0 0 66 24">
+<style id="current-color-scheme" type="text/css">
+.ColorScheme-Text{color:#eef3f6}
+.ColorScheme-Background{color:#1c2630}
+.ColorScheme-Highlight{color:#e9f1f5}
+.ColorScheme-ViewBackground{color:#121920}
+.ColorScheme-NeutralText{color:#ffb547}
+.ColorScheme-NegativeText{color:#ff5a52}
+.ColorScheme-PositiveText{color:#7fe3b0}
+</style>
+<g id="topleft"><rect x="0" y="0" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="0" y="0" width="3" height="3" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="0" y="0" width="3" height="1" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/><rect x="0" y="1" width="1" height="2" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-topleft"><rect x="0" y="0" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="0" y="0" width="3" height="3" fill="#000"/></g>
+<g id="top"><rect x="3" y="0" width="8" height="3" fill="#000" fill-opacity="0.002"/><rect x="3" y="0" width="8" height="3" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="3" y="0" width="8" height="1" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-top"><rect x="3" y="0" width="8" height="3" fill="#000" fill-opacity="0.002"/><rect x="3" y="0" width="8" height="3" fill="#000"/></g>
+<g id="topright"><rect x="11" y="0" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="11" y="0" width="3" height="3" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="11" y="0" width="3" height="1" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/><rect x="13" y="1" width="1" height="2" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-topright"><rect x="11" y="0" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="11" y="0" width="3" height="3" fill="#000"/></g>
+<g id="left"><rect x="0" y="3" width="3" height="8" fill="#000" fill-opacity="0.002"/><rect x="0" y="3" width="3" height="8" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="0" y="3" width="1" height="8" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-left"><rect x="0" y="3" width="3" height="8" fill="#000" fill-opacity="0.002"/><rect x="0" y="3" width="3" height="8" fill="#000"/></g>
+<g id="center"><rect x="3" y="3" width="8" height="8" fill="#000" fill-opacity="0.002"/><rect x="3" y="3" width="8" height="8" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/></g>
+<g id="mask-center"><rect x="3" y="3" width="8" height="8" fill="#000" fill-opacity="0.002"/><rect x="3" y="3" width="8" height="8" fill="#000"/></g>
+<g id="right"><rect x="11" y="3" width="3" height="8" fill="#000" fill-opacity="0.002"/><rect x="11" y="3" width="3" height="8" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="13" y="3" width="1" height="8" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-right"><rect x="11" y="3" width="3" height="8" fill="#000" fill-opacity="0.002"/><rect x="11" y="3" width="3" height="8" fill="#000"/></g>
+<g id="bottomleft"><rect x="0" y="11" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="0" y="11" width="3" height="3" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="0" y="13" width="3" height="1" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/><rect x="0" y="11" width="1" height="2" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-bottomleft"><rect x="0" y="11" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="0" y="11" width="3" height="3" fill="#000"/></g>
+<g id="bottom"><rect x="3" y="11" width="8" height="3" fill="#000" fill-opacity="0.002"/><rect x="3" y="11" width="8" height="3" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="3" y="13" width="8" height="1" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-bottom"><rect x="3" y="11" width="8" height="3" fill="#000" fill-opacity="0.002"/><rect x="3" y="11" width="8" height="3" fill="#000"/></g>
+<g id="bottomright"><rect x="11" y="11" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="11" y="11" width="3" height="3" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.96"/><rect x="11" y="13" width="3" height="1" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/><rect x="13" y="11" width="1" height="2" class="ColorScheme-Text" fill="currentColor" fill-opacity="0.16"/></g>
+<g id="mask-bottomright"><rect x="11" y="11" width="3" height="3" fill="#000" fill-opacity="0.002"/><rect x="11" y="11" width="3" height="3" fill="#000"/></g>
+<rect id="hint-top-margin" x="24" y="0" width="1" height="6" fill="#000" fill-opacity="0.002"/>
+<rect id="hint-bottom-margin" x="32" y="0" width="1" height="6" fill="#000" fill-opacity="0.002"/>
+<rect id="hint-left-margin" x="40" y="0" width="6" height="1" fill="#000" fill-opacity="0.002"/>
+<rect id="hint-right-margin" x="48" y="0" width="6" height="1" fill="#000" fill-opacity="0.002"/>
+</svg>

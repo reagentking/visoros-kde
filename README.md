@@ -16,11 +16,12 @@ The concept and full build plan are in `docs/visoros-kde-concept.html`.
 | `kvantum/` | Qt app style (recolor of KvAdaptaDark) | `kvantum/build.py` |
 | `wallpaper/` | Spanning wallpapers, cut per monitor | `wallpaper/src/render.py` |
 | `fonts/` | Saira SemiCondensed, Barlow, Share Tech Mono (OFL) | `scripts/get-fonts.sh` |
-| `look-and-feel/` | Global theme package (defaults; splash/lock/logout borrowed from CachyOS-Nord for now) | hand-written |
+| `look-and-feel/` | Global theme package: defaults + green boot-log splash (logout borrowed from CachyOS-Nord) | hand-written |
 | `qml/` | Ammo-counter OSD, shadowing Plasma's `org.kde.plasma.workspace.osd` module | `scripts/osd-override.sh on` |
 | `plasmoids/` | Workspace Tabs widget (virtual desktops as menu tabs) | hand-written |
 | `sensorfaces/` | VisorOS Dashboard face for System Monitor / sensor widgets | hand-written |
-| `scripts/` | Backup/restore, panel layout, OSD override | |
+| `plymouth/` | Boot theme (green back-end log), text pre-rendered | `plymouth/build.py` |
+| `scripts/` | Backup/restore, panel layout, OSD override, Plymouth install | |
 
 ## Use
 
@@ -33,6 +34,7 @@ scripts/backup.sh pre-visr       # snapshot the current look first
 ./apply.sh                       # switch the session over (WALLPAPER=ring for the ring set)
 scripts/apply-panels.sh          # one top taskbar per screen, apps from that screen only
 scripts/osd-override.sh on       # ammo-counter volume/brightness OSD (off to revert)
+python3 plymouth/build.py && scripts/install-plymouth.sh on   # boot theme (sudo; off to revert)
 ```
 
 Roll back with `scripts/restore.sh backups/<name>.tar.gz`.
@@ -44,6 +46,14 @@ Roll back with `scripts/restore.sh backups/<name>.tar.gz`.
   `wallpaper/src/render.py` and `apply.sh`.
 - The UNSC emblem belongs to Microsoft/343 Industries and is kept out of the repo.
   Everything else is original or OFL/GPL-licensed.
+
+## Lock and login screens
+
+Plasma 6.8 takes the lock screen layout from the Plasma shell package and Plasma
+Login Manager compiles its greeter, so neither accepts a custom layout from a theme.
+`apply.sh` sets the lock screen wallpaper (render `--lock` for a version that keeps
+the clock clear); for the login screen use **System Settings → Login Screen** and
+apply your Plasma settings and wallpaper there.
 
 ## Using it on another machine
 

@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=VisorOS
+Description=VISR OS back-end boot log: green on black, segmented progress
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/visoros
+ScriptFile=/usr/share/plymouth/themes/visoros/visoros.script

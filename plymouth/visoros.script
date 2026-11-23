@@ -1,0 +1,115 @@
+# VisorOS Plymouth theme: back-end boot log.
+#
+#   VISR OS // CACHYOS // BOOT
+#   [ OK ] systemd ................ INIT
+#   [ OK ] udev ................... DEVICES      <- one line per sixth of boot progress
+#
+#                V I S R   O S
+#          ▮▮▮▮▮▮▮▯▯▯▯▯ (12 segments)
+#
+# All text is pre-rendered PNG (see build.py); assets are sized for a
+# 2560px-wide display and scaled to the real one.
+
+Window.SetBackgroundTopColor(0.027, 0.043, 0.035);
+Window.SetBackgroundBottomColor(0.027, 0.043, 0.035);
+
+W = Window.GetWidth();
+H = Window.GetHeight();
+X0 = Window.GetX();
+Y0 = Window.GetY();
+k = W / 2560;
+if (k > H / 1440) k = H / 1440;
+if (k < 0.35) k = 0.35;
+
+fun scaled(name) {
+    img = Image(name);
+    return img.Scale(img.GetWidth() * k, img.GetHeight() * k);
+}
+
+# ---------------------------------------------------------------- header + log
+header = Sprite(scaled("header.png"));
+header.SetPosition(X0 + 64 * k, Y0 + 58 * k, 10);
+
+NLOG = 6;
+for (i = 1; i <= NLOG; i++) {
+    okimg[i] = scaled("ok" + i + ".png");
+    lineimg[i] = scaled("line" + i + ".png");
+    ok[i] = Sprite(okimg[i]);
+    line[i] = Sprite(lineimg[i]);
+    y = Y0 + (58 + 26 + i * 36) * k + header.GetImage().GetHeight();
+    ok[i].SetPosition(X0 + 64 * k, y, 10);
+    line[i].SetPosition(X0 + 64 * k + okimg[i].GetWidth() + 12 * k, y, 10);
+    ok[i].SetOpacity(0);
+    line[i].SetOpacity(0);
+}
+
+# ---------------------------------------------------------------- title + bar
+title = Sprite(scaled("title.png"));
+title.SetPosition(X0 + W / 2 - title.GetImage().GetWidth() / 2, Y0 + H / 2 - title.GetImage().GetHeight() / 2, 10);
+
+NSEG = 12;
+on = scaled("seg_on.png");
+off = scaled("seg_off.png");
+gap = 8 * k;
+barw = NSEG * on.GetWidth() + (NSEG - 1) * gap;
+barx = X0 + W / 2 - barw / 2;
+bary = Y0 + H / 2 + title.GetImage().GetHeight() / 2 + 40 * k;
+for (i = 0; i < NSEG; i++) {
+    seg[i] = Sprite(off);
+    seg[i].SetPosition(barx + i * (on.GetWidth() + gap), bary, 10);
+    lit[i] = 0;
+}
+
+fun progress_callback(duration, progress) {
+    n = Math.Int(progress * NSEG + 0.5);
+    for (i = 0; i < NSEG; i++) {
+        if (i < n && lit[i] == 0) { seg[i].SetImage(on); lit[i] = 1; }
+    }
+    shown = Math.Int(progress * NLOG + 0.999);
+    for (i = 1; i <= NLOG; i++) {
+        if (i <= shown) { ok[i].SetOpacity(1); line[i].SetOpacity(1); }
+    }
+}
+Plymouth.SetBootProgressFunction(progress_callback);
+
+# ---------------------------------------------------------------- prompts
+# Disk-unlock / password prompts (not used on this machine, kept working anyway).
+prompt_sprite = Sprite();
+bullets_sprite = Sprite();
+
+fun display_normal_callback() {
+    prompt_sprite.SetOpacity(0);
+    bullets_sprite.SetOpacity(0);
+}
+
+fun display_password_callback(prompt, bullets) {
+    prompt_sprite.SetImage(Image.Text("> " + prompt, 0.43, 1, 0.56));
+    prompt_sprite.SetPosition(X0 + W / 2 - prompt_sprite.GetImage().GetWidth() / 2, bary + 60 * k, 20);
+    prompt_sprite.SetOpacity(1);
+    stars = "";
+    for (i = 0; i < bullets; i++) stars += "*";
+    bullets_sprite.SetImage(Image.Text(stars + "_", 0.43, 1, 0.56));
+    bullets_sprite.SetPosition(X0 + W / 2 - bullets_sprite.GetImage().GetWidth() / 2, bary + 90 * k, 20);
+    bullets_sprite.SetOpacity(1);
+}
+
+fun display_question_callback(prompt, entry) {
+    display_password_callback(prompt + " " + entry, 0);
+}
+
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayQuestionFunction(display_question_callback);
+
+# ---------------------------------------------------------------- messages
+msg_sprite = Sprite();
+fun message_callback(text) {
+    msg_sprite.SetImage(Image.Text(text, 0.18, 0.48, 0.27));
+    msg_sprite.SetPosition(X0 + 64 * k, Y0 + H - 80 * k, 10);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+fun quit_callback() {
+    for (i = 0; i < NSEG; i++) seg[i].SetImage(on);
+}
+Plymouth.SetQuitFunction(quit_callback);

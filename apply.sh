@@ -28,6 +28,18 @@ dbus-send --session --type=signal /KGlobalSettings org.kde.KGlobalSettings.notif
 echo "== Global theme package (OSD override via scripts/osd-override.sh on)"
 kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage org.visoros.desktop
 
+echo "== Lock screen wallpaper"
+# Plasma 6.8 takes the lock screen layout from the shell package, so only its wallpaper is themed.
+LOCKWP="$WP/VisorOS-UNSC-lock-2560x1440.png"; [[ -f "$LOCKWP" ]] || LOCKWP="$WP/VisorOS-DP-3-2560x1440.png"
+for k in Image PreviewImage; do
+  kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key "$k" "file://$LOCKWP"
+done
+kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key FillMode 2
+
+echo "== Boot splash"
+kwriteconfig6 --file ksplashrc --group KSplash --key Engine KSplashQML
+kwriteconfig6 --file ksplashrc --group KSplash --key Theme org.visoros.desktop
+
 echo "== Fonts"
 if [[ -n "$(fc-list 'Saira SemiCondensed')" && -n "$(fc-list 'Barlow')" ]]; then
   ui="Barlow,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"

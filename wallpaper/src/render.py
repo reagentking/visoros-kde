@@ -292,12 +292,25 @@ def main():
     ap.add_argument("out", nargs="?", default=os.path.join(os.path.dirname(__file__), "..", "out"))
     ap.add_argument("--theme", choices=["ring", "unsc"], default="ring")
     ap.add_argument("--emblem", help="RGBA emblem PNG for --theme unsc")
+    ap.add_argument("--lock", action="store_true",
+                    help="unsc only: render just the lock-screen image (emblem smaller and lower, top third clear for the clock)")
     args = ap.parse_args()
+    if args.lock:
+        global EMB_H, EMB_CY
+        EMB_H = P["h"] * 0.40
+        EMB_CY = P["y"] + P["h"] * 0.64
     out = args.out
     os.makedirs(out, exist_ok=True)
     emblem = Image.open(args.emblem).convert("RGBA") if args.theme == "unsc" else None
     draw = (lambda cr: draw_unsc(cr, emblem.width / emblem.height)) if emblem else draw_scene
     prefix = "VisorOS-UNSC" if emblem else "VisorOS"
+
+    if args.lock:
+        if not emblem: ap.error("--lock needs --theme unsc --emblem ...")
+        s = SCREENS["DP-3"]; pw, ph = s["px"]; sc = pw / s["w"]
+        img = composite_emblem(render(sc, s["x"], s["y"], pw, ph, draw), sc, s["x"], s["y"], emblem)
+        path = os.path.join(out, f"VisorOS-UNSC-lock-{pw}x{ph}.png"); img.save(path, optimize=True); print(path)
+        return
 
     for name, s in SCREENS.items():
         pw, ph = s["px"]

@@ -44,3 +44,23 @@ Roll back with `scripts/restore.sh backups/<name>.tar.gz`.
   `wallpaper/src/render.py` and `apply.sh`.
 - The UNSC emblem belongs to Microsoft/343 Industries and is kept out of the repo.
   Everything else is original or OFL/GPL-licensed.
+
+## Using it on another machine
+
+`install.sh`, `apply.sh` and the Plasma Style, window frame, app style, OSD, workspace
+tabs and dashboard face work anywhere with Plasma 6. Two things are specific to the
+original four-monitor setup:
+
+- **Wallpapers:** edit the `SCREENS` table at the top of `wallpaper/src/render.py`
+  (physical size in mm, resolution, position) and re-render. On a single monitor the
+  primary-screen image alone is enough.
+- **Per-screen wallpaper matching:** the `byPos` table in `apply.sh` maps screen
+  positions (from `kscreen-doctor -o`) to image files. Unknown screens fall back to
+  the primary image.
+
+## License
+
+GPL-3.0-or-later (see `LICENSE`). The Kvantum theme is a recolor of Tsu Jan's
+KvAdaptaDark (GPL). Fonts in `fonts/` are under the SIL Open Font License; each
+family's `*-OFL.txt` is included. Halo, UNSC and VISR are trademarks of Microsoft;
+this is an unofficial fan theme and ships none of their artwork.
